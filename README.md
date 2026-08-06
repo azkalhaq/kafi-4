@@ -1,14 +1,21 @@
-# Birthday Invitation
+# Birthday Invitation (Next.js)
 
-A hero-themed birthday invitation (Spider-Man · Iron Man · Buzz Lightyear vibes) with a click-to-open envelope animation. Built for GitHub Pages — no build step, no dependencies.
+A responsive birthday invitation built with Next.js and exported as a static site for GitHub Pages.
+
+Live path once Pages is enabled:
+
+```text
+https://azkalhaq.github.io/kafi-4/
+https://azkalhaq.github.io/kafi-4/?to=GuestName
+```
 
 ## 1. Customise the invitation
 
-Open `script.js` and edit the `invitation` object at the top:
+Open `lib/invitation.ts` and edit the `invitation` object:
 
 - Child's name
 - Date and time
-- Venue and Google Maps URL
+- Venue, map query, and Google Maps URL
 - WhatsApp RSVP number and message
 - Dress code
 - Family message
@@ -16,64 +23,56 @@ Open `script.js` and edit the `invitation` object at the top:
 Use the WhatsApp phone number in international format, digits only.  
 Example for Indonesia: `6281234567890`.
 
-## 2. Personalise each guest link
+## 2. Personalised guest link
 
-Share a unique URL with `?to=Name`:
+Share a link with `?to=<name>` to personalise the greeting:
 
 ```text
-https://YOUR-USERNAME.github.io/invitation-repo/?to=Maya
-https://YOUR-USERNAME.github.io/invitation-repo/?to=Uncle%20Sam
+https://azkalhaq.github.io/kafi-4/?to=Aisha
+https://azkalhaq.github.io/kafi-4/?to=Uncle+Budi
 ```
 
-That guest will see a greeting like “Hey Maya!”, a personalised invite label, and a WhatsApp RSVP message that includes their name.
+The page shows “Dear Aisha,” and uses the name in the invitation heading and RSVP message.
 
 ## 3. Preview locally
 
 ```bash
-python3 -m http.server 8000
+npm install
+npm run dev
 ```
 
-Then open:
+Open [http://localhost:3000](http://localhost:3000) and try `/?to=YourName`.
 
-```text
-http://localhost:8000
-http://localhost:8000/?to=Maya
-```
-
-Or open `index.html` directly in your browser.
-
-## 4. Publish at username.github.io/invitation-repo/
-
-1. Create a GitHub repository (e.g. `invitation-repo`, or rename this folder’s repo).
-2. Push all files in this folder to the repository **root**.
-3. Open **Settings → Pages**.
-4. Under **Build and deployment**, choose **Deploy from a branch**.
-5. Select branch **main** and folder **/(root)**, then save.
-6. Your invitation will be at:
-
-```text
-https://YOUR-USERNAME.github.io/invitation-repo/
-```
-
-CSS and JavaScript use relative paths (`./styles.css`, `./script.js`), so the page works from a repository subpath.
-
-## 5. Upload using Git
+To preview the GitHub Pages build (includes `/kafi-4` base path):
 
 ```bash
-git init
-git add .
-git commit -m "Create birthday invitation"
-git branch -M main
-git remote add origin https://github.com/YOUR-USERNAME/invitation-repo.git
-git push -u origin main
+npm run build
+npm start
 ```
 
-Then enable GitHub Pages using step 3 above.
+Then open `http://localhost:3000/kafi-4/?to=YourName`.
 
-## How it works
+## 4. Publish on GitHub Pages
 
-1. Guests land on a sealed envelope page.
-2. They click **Open Me** — the flap lifts and the invitation slides out.
-3. Details, WhatsApp RSVP, map, and calendar download appear after opening.
+1. Push this repository to GitHub (`azkalhaq/kafi-4`).
+2. Open **Settings → Pages**.
+3. Under **Build and deployment**, set **Source** to **GitHub Actions**.
+4. Push to `main` (or run the **Deploy to GitHub Pages** workflow manually).
+5. The site will be available at:
 
-Guests who prefer reduced motion see the invitation content immediately.
+```text
+https://azkalhaq.github.io/kafi-4/
+```
+
+The Next.js config uses `output: "export"` with `basePath: "/kafi-4"` in production so assets resolve correctly under the repository subpath.
+
+## Accessibility included
+
+- Semantic headings and event details
+- Keyboard-visible focus states
+- Skip link and “View invitation” scroll CTA
+- Embedded map with open-in-Maps fallback
+- High-contrast controls
+- Reduced-motion support
+- Responsive layout
+- Accommodation and dietary-arrangement note
