@@ -1,13 +1,42 @@
 "use client";
 
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { ReactNode } from "react";
 import { useSearchParams } from "next/navigation";
 import { invitation } from "@/lib/invitation";
 import { buildCalendarFile, formatGuestName } from "@/lib/calendar";
 import { MapEmbed } from "@/components/MapEmbed";
 import { Toast, useToast } from "@/components/Toast";
+import { SparkleField } from "@/components/art/Sparkles";
+import {
+  ChevronRight,
+  CloudBand,
+  HeartShape,
+  MoonArt,
+  OrbitArc,
+  RingedPlanetArt,
+  RocketArt,
+  RocketGlyph,
+  StarShape
+} from "@/components/art/Illustrations";
+import {
+  CalendarIcon,
+  ClockIcon,
+  GiftIcon,
+  PinIcon,
+  ShirtIcon
+} from "@/components/art/FactIcons";
 
 const LAUNCH_MS = 900;
+
+type Fact = {
+  key: string;
+  label: string;
+  value: string;
+  detail?: string;
+  tone: string;
+  icon: ReactNode;
+};
 
 function prefersReducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -27,6 +56,52 @@ function InvitationContent() {
       : invitation.rsvpMessage;
     return `https://wa.me/${invitation.rsvpPhone}?text=${encodeURIComponent(personalNote)}`;
   }, [guestName]);
+
+  const facts = useMemo<Fact[]>(() => {
+    const items: Fact[] = [
+      {
+        key: "date",
+        label: "Date",
+        value: invitation.dateLabel,
+        tone: "peach",
+        icon: <CalendarIcon />
+      },
+      {
+        key: "time",
+        label: "Time",
+        value: invitation.timeLabel,
+        tone: "sky",
+        icon: <ClockIcon />
+      },
+      {
+        key: "location",
+        label: "Location",
+        value: invitation.venueName,
+        detail: invitation.venueAddress,
+        tone: "mint",
+        icon: <PinIcon />
+      },
+      {
+        key: "dress",
+        label: "Dress code",
+        value: invitation.dressCode,
+        tone: "sun",
+        icon: <ShirtIcon />
+      }
+    ];
+
+    if (invitation.showRsvp) {
+      items.push({
+        key: "rsvp",
+        label: "RSVP",
+        value: `By ${invitation.rsvpBy}`,
+        tone: "blush",
+        icon: <GiftIcon />
+      });
+    }
+
+    return items;
+  }, []);
 
   const scrollToInvitation = useCallback((behavior: ScrollBehavior = "smooth") => {
     const target = document.getElementById("invitation");
@@ -108,67 +183,60 @@ function InvitationContent() {
       </a>
 
       <div className="page-shell">
-        <div className="decor decor-star decor-star-one" aria-hidden="true">
-          ✦
-        </div>
-        <div className="decor decor-star decor-star-two" aria-hidden="true">
-          ✦
-        </div>
-        <div className="decor decor-balloon decor-balloon-one" aria-hidden="true" />
-        <div className="decor decor-balloon decor-balloon-two" aria-hidden="true" />
+        <SparkleField />
 
-        <header
-          className="hero"
-          id="hero"
-          aria-labelledby="party-title"
-        >
+        <header className="hero" id="hero" aria-labelledby="party-title">
           {guestName ? (
             <p className="guest-greeting">Dear {guestName},</p>
           ) : (
             <p className="eyebrow">A little celebration is coming</p>
           )}
 
+          <p className="ornament" aria-hidden="true">
+            <span className="ornament-rule" />
+            <StarShape className="ornament-star" />
+            <span className="ornament-rule" />
+          </p>
+
           <h1 id="party-title">
-            <span>{invitation.childName}</span>&apos;s
+            <span className="title-name">{invitation.childName}&apos;s</span>
             <span className="title-highlight">Birthday Adventure</span>
           </h1>
 
           <p className="hero-copy">{invitation.intro}</p>
 
-          <div
-            className={`hero-illustration${isLaunching ? " is-launching" : ""}`}
-          >
-            <div className="sun" aria-hidden="true" />
-            <div className="cloud cloud-left" aria-hidden="true" />
-            <div className="cloud cloud-right" aria-hidden="true" />
-            <div className="rocket" aria-hidden="true">
-              <div className="rocket-window" />
-              <div className="rocket-fin rocket-fin-left" />
-              <div className="rocket-fin rocket-fin-right" />
-              <div className="rocket-flame" />
-              <div className="rocket-smoke rocket-smoke-one" />
-              <div className="rocket-smoke rocket-smoke-two" />
-              <div className="rocket-smoke rocket-smoke-three" />
+          <div className={`hero-scene${isLaunching ? " is-launching" : ""}`}>
+            <span className="scene-glow" aria-hidden="true" />
+            <OrbitArc className="scene-orbit scene-orbit--left" />
+            <OrbitArc className="scene-orbit scene-orbit--right" />
+            <MoonArt className="scene-moon" />
+            <RingedPlanetArt className="scene-planet" />
+
+            <div className="rocket">
+              <RocketArt className="rocket-art" />
+              <span className="rocket-smoke rocket-smoke-one" aria-hidden="true" />
+              <span className="rocket-smoke rocket-smoke-two" aria-hidden="true" />
+              <span className="rocket-smoke rocket-smoke-three" aria-hidden="true" />
             </div>
-            <div className="planet" aria-hidden="true">
-              <div className="planet-ring" />
-            </div>
+
+            <CloudBand className="scene-clouds" />
 
             <button
               className="launch-button"
               type="button"
               onClick={() => launchRocket(true)}
-              aria-label="Launch rocket and view invitation"
+              aria-label="Launch the rocket and view the invitation details"
             >
-              <span className="launch-button-ring" aria-hidden="true" />
-              <span className="launch-button-core">
-                <span className="launch-button-arrow" aria-hidden="true">
-                  ▲
+              <span className="launch-pulse" aria-hidden="true" />
+              <span className="launch-core">
+                <span className="launch-badge" aria-hidden="true">
+                  <RocketGlyph />
                 </span>
-                <span className="launch-button-label">
-                  <span className="launch-button-kicker">Ready for liftoff</span>
-                  <span className="launch-button-title">Launch</span>
+                <span className="launch-text">
+                  <span className="launch-kicker">Ready for liftoff</span>
+                  <span className="launch-title">Launch</span>
                 </span>
+                <ChevronRight className="launch-chevron" />
               </span>
             </button>
           </div>
@@ -176,56 +244,35 @@ function InvitationContent() {
 
         <main id="invitation" tabIndex={-1}>
           <section className="invitation-card" aria-labelledby="details-title">
+            <p className="ornament" aria-hidden="true">
+              <span className="ornament-rule" />
+              <StarShape className="ornament-star" />
+              <span className="ornament-rule" />
+            </p>
+
             <div className="card-heading">
               <p className="mini-label">
                 {guestName ? `${guestName}, you are invited` : "You are invited"}
               </p>
               <h2 id="details-title">Come celebrate with us!</h2>
+              <HeartShape className="card-heart" />
             </div>
 
-            <dl className="event-grid">
-              <div className="event-item">
-                <dt>
-                  <span className="icon" aria-hidden="true">
-                    📅
-                  </span>
-                  Date
-                </dt>
-                <dd>{invitation.dateLabel}</dd>
-              </div>
-
-              <div className="event-item">
-                <dt>
-                  <span className="icon" aria-hidden="true">
-                    ⏰
-                  </span>
-                  Time
-                </dt>
-                <dd>{invitation.timeLabel}</dd>
-              </div>
-
-              <div className="event-item event-item-wide">
-                <dt>
-                  <span className="icon" aria-hidden="true">
-                    📍
-                  </span>
-                  Venue
-                </dt>
-                <dd>
-                  <strong>{invitation.venueName}</strong>
-                  <span>{invitation.venueAddress}</span>
-                </dd>
-              </div>
-
-              <div className="event-item event-item-wide">
-                <dt>
-                  <span className="icon" aria-hidden="true">
-                    👕
-                  </span>
-                  Dress code
-                </dt>
-                <dd>{invitation.dressCode}</dd>
-              </div>
+            <dl className="quick-facts">
+              {facts.map((fact) => (
+                <div className="fact" key={fact.key}>
+                  <dt>
+                    <span className={`fact-icon fact-icon--${fact.tone}`} aria-hidden="true">
+                      {fact.icon}
+                    </span>
+                    {fact.label}
+                  </dt>
+                  <dd>
+                    <strong>{fact.value}</strong>
+                    {fact.detail ? <span>{fact.detail}</span> : null}
+                  </dd>
+                </div>
+              ))}
             </dl>
 
             <MapEmbed
@@ -286,9 +333,7 @@ function InvitationContent() {
         </main>
 
         <footer>
-          <p>
-            Made with joy for {invitation.childName}&apos;s special day ✨
-          </p>
+          <p>Made with joy for {invitation.childName}&apos;s special day</p>
         </footer>
       </div>
 

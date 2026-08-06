@@ -12,6 +12,7 @@ export function MapEmbed({ query, venueName, mapUrl }: MapEmbedProps) {
       <div className="map-heading">
         <p className="mini-label">Find us</p>
         <h3>Party location</h3>
+        <p className="map-address">{venueName}</p>
       </div>
       <div className="map-frame">
         <iframe
