@@ -33,7 +33,7 @@ export const invitation = {
     "We are excited to share this special day with the people who make our son's world brighter. Thank you for being part of his happy memories.",
 
   // Background music (Happy Birthday) starts after the rocket launches.
-  playBackgroundMusic: false,
+  playBackgroundMusic: true,
   // Set to true to keep looping the song; false plays it once.
   loopBackgroundMusic: false
 } as const;

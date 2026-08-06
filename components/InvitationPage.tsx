@@ -196,24 +196,26 @@ function InvitationContent() {
         <SparkleField />
 
         <header className="hero" id="hero" aria-labelledby="party-title">
-          {guestName ? (
-            <p className="guest-greeting">Dear {guestName},</p>
-          ) : (
-            <p className="eyebrow">A little celebration is coming</p>
-          )}
+          <div className="content-rail">
+            {guestName ? (
+              <p className="guest-greeting">Dear {guestName},</p>
+            ) : (
+              <p className="eyebrow">A little celebration is coming</p>
+            )}
 
-          <p className="ornament" aria-hidden="true">
-            <span className="ornament-rule" />
-            <StarShape className="ornament-star" />
-            <span className="ornament-rule" />
-          </p>
+            <p className="ornament" aria-hidden="true">
+              <span className="ornament-rule" />
+              <StarShape className="ornament-star" />
+              <span className="ornament-rule" />
+            </p>
 
-          <h1 id="party-title">
-            <span className="title-name">{invitation.childName}&apos;s</span>
-            <span className="title-highlight">Birthday Adventure</span>
-          </h1>
+            <h1 id="party-title">
+              <span className="title-name">{invitation.childName}&apos;s</span>
+              <span className="title-highlight">Birthday Adventure</span>
+            </h1>
 
-          <p className="hero-copy">{invitation.intro}</p>
+            <p className="hero-copy">{invitation.intro}</p>
+          </div>
 
           <div className={`hero-scene${isLaunching ? " is-launching" : ""}`}>
             <span className="scene-glow" aria-hidden="true" />
@@ -254,7 +256,7 @@ function InvitationContent() {
           </div>
         </header>
 
-        <main id="invitation" tabIndex={-1}>
+        <main id="invitation" className="content-rail" tabIndex={-1}>
           <section className="invitation-card" aria-labelledby="details-title">
             <p className="ornament" aria-hidden="true">
               <span className="ornament-rule" />
@@ -344,7 +346,7 @@ function InvitationContent() {
           </section>
         </main>
 
-        <footer>
+        <footer className="content-rail">
           <p>Made with joy for {invitation.childName}&apos;s special day</p>
         </footer>
       </div>

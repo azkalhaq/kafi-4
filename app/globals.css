@@ -77,10 +77,16 @@ a {
 
 .page-shell {
   position: relative;
-  width: min(100% - 2rem, 1080px);
-  margin-inline: auto;
+  width: 100%;
   overflow-x: clip;
   overflow-y: visible;
+}
+
+.content-rail {
+  position: relative;
+  z-index: 1;
+  width: min(100% - 2rem, 1080px);
+  margin-inline: auto;
 }
 
 /* ---------- confetti ---------- */
@@ -90,12 +96,13 @@ a {
   inset: 0;
   pointer-events: none;
   z-index: 0;
+  overflow: hidden;
 }
 
 .sparkle {
   position: absolute;
-  display: block;
-  animation: sparkle-twinkle 4.5s ease-in-out infinite;
+  display: grid;
+  place-items: center;
 }
 
 .sparkle svg {
@@ -104,10 +111,23 @@ a {
   fill: currentColor;
 }
 
-.sparkle--dot {
+.sparkle--dot,
+.sparkle--orb {
   border-radius: 50%;
   background: currentColor;
+}
+
+.sparkle--dot {
   opacity: 0.35;
+}
+
+.sparkle--orb {
+  opacity: 0.28;
+  box-shadow: 0 0 0 6px color-mix(in srgb, currentColor 18%, transparent);
+}
+
+.sparkle--cross {
+  opacity: 0.55;
 }
 
 .sparkle--orange {
@@ -126,6 +146,26 @@ a {
   color: var(--blue);
 }
 
+.sparkle--mint {
+  color: var(--mint);
+}
+
+.sparkle--pink {
+  color: var(--pink);
+}
+
+.sparkle-motion--twinkle {
+  animation: sparkle-twinkle 4.5s ease-in-out infinite;
+}
+
+.sparkle-motion--drift {
+  animation: sparkle-drift 5.8s ease-in-out infinite;
+}
+
+.sparkle-motion--spin {
+  animation: sparkle-spin 9s linear infinite;
+}
+
 .sparkle:nth-child(even) {
   animation-delay: 1.4s;
 }
@@ -134,13 +174,16 @@ a {
   animation-delay: 2.6s;
 }
 
+.sparkle:nth-child(5n) {
+  animation-delay: 0.7s;
+}
+
 /* ---------- hero ---------- */
 
 .hero {
   position: relative;
   z-index: 1;
-  padding: clamp(3rem, 8vw, 5.5rem) clamp(1rem, 5vw, 4rem)
-    clamp(2.5rem, 6vw, 4rem);
+  padding: clamp(3rem, 8vw, 5.5rem) 0 clamp(2.5rem, 6vw, 4rem);
   text-align: center;
 }
 
@@ -989,6 +1032,32 @@ footer {
   }
 }
 
+@keyframes sparkle-drift {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: translateY(0) scale(0.92);
+  }
+  50% {
+    opacity: 0.95;
+    transform: translateY(-12px) scale(1.05);
+  }
+}
+
+@keyframes sparkle-spin {
+  0% {
+    opacity: 0.45;
+    transform: rotate(0deg) scale(0.9);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.45;
+    transform: rotate(360deg) scale(0.9);
+  }
+}
+
 /* ---------- responsive ---------- */
 
 @media (max-width: 860px) {
@@ -1012,12 +1081,8 @@ footer {
 }
 
 @media (max-width: 720px) {
-  .page-shell {
+  .content-rail {
     width: min(100% - 1rem, 1080px);
-  }
-
-  .hero {
-    padding-inline: 0.5rem;
   }
 
   .hero-scene {
@@ -1188,7 +1253,8 @@ footer {
     background: white;
   }
 
-  .page-shell {
+  .page-shell,
+  .content-rail {
     width: 100%;
   }
 
