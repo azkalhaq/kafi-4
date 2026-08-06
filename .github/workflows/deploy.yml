@@ -5,16 +5,14 @@ on:
     branches: ["main"]
   workflow_dispatch:
 
-# GITHUB_TOKEN needs these to publish a Pages deployment.
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Let a running deployment finish rather than cancelling it mid-publish.
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -32,12 +30,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # next.config.mjs reads GITHUB_REPOSITORY to set basePath to /<repo>,
-      # which is what makes https://<owner>.github.io/<repo>/ resolve assets.
+      # GITHUB_REPOSITORY is "owner/repo". next.config.mjs turns that into
+      # basePath "/repo" so assets resolve at https://owner.github.io/repo/
       - name: Build static export
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
         run: npm run build
 
-      # Stops GitHub Pages from ignoring Next.js' /_next directory.
+      # Stops GitHub Pages from treating /_next as a Jekyll folder.
       - name: Disable Jekyll processing
         run: touch out/.nojekyll
 

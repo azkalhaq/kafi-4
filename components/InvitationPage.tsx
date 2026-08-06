@@ -26,6 +26,7 @@ import {
   PinIcon,
   ShirtIcon
 } from "@/components/art/FactIcons";
+import { MusicToggle, useInvitationAudio } from "@/components/AudioControls";
 
 const LAUNCH_MS = 900;
 
@@ -49,6 +50,10 @@ function InvitationContent() {
   const [isLaunching, setIsLaunching] = useState(false);
   const hasLaunchedRef = useRef(false);
   const launchTimerRef = useRef<number | null>(null);
+  const { musicOn, toggleMusic, playLaunch, musicEnabled } = useInvitationAudio({
+    enabled: invitation.playBackgroundMusic,
+    loop: invitation.loopBackgroundMusic
+  });
 
   const rsvpHref = useMemo(() => {
     const personalNote = guestName
@@ -118,6 +123,7 @@ function InvitationContent() {
       }
 
       hasLaunchedRef.current = true;
+      void playLaunch();
 
       if (prefersReducedMotion()) {
         setIsLaunching(true);
@@ -134,7 +140,7 @@ function InvitationContent() {
         scrollToInvitation();
       }, LAUNCH_MS * 0.45);
     },
-    [scrollToInvitation]
+    [playLaunch, scrollToInvitation]
   );
 
   useEffect(() => {
@@ -182,6 +188,10 @@ function InvitationContent() {
         Skip to invitation details
       </a>
 
+      {musicEnabled ? (
+        <MusicToggle musicOn={musicOn} onToggle={() => void toggleMusic()} />
+      ) : null}
+
       <div className="page-shell">
         <SparkleField />
 
@@ -213,10 +223,12 @@ function InvitationContent() {
             <RingedPlanetArt className="scene-planet" />
 
             <div className="rocket">
-              <RocketArt className="rocket-art" />
-              <span className="rocket-smoke rocket-smoke-one" aria-hidden="true" />
-              <span className="rocket-smoke rocket-smoke-two" aria-hidden="true" />
-              <span className="rocket-smoke rocket-smoke-three" aria-hidden="true" />
+              <div className="rocket-float">
+                <RocketArt className="rocket-art" />
+                <span className="rocket-smoke rocket-smoke-one" aria-hidden="true" />
+                <span className="rocket-smoke rocket-smoke-two" aria-hidden="true" />
+                <span className="rocket-smoke rocket-smoke-three" aria-hidden="true" />
+              </div>
             </div>
 
             <CloudBand className="scene-clouds" />
