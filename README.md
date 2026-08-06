@@ -43,10 +43,11 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) and try `/?to=YourName`.
 
-To preview the GitHub Pages build (includes `/kafi-4` base path):
+To preview the static export exactly as GitHub Pages serves it (with the
+`/kafi-4` prefix):
 
 ```bash
-npm run build
+NEXT_PUBLIC_BASE_PATH=/kafi-4 npm run build
 npm start
 ```
 
@@ -54,17 +55,31 @@ Then open `http://localhost:3000/kafi-4/?to=YourName`.
 
 ## 4. Publish on GitHub Pages
 
-1. Push this repository to GitHub (`azkalhaq/kafi-4`).
+1. Push this repository to GitHub.
 2. Open **Settings → Pages**.
 3. Under **Build and deployment**, set **Source** to **GitHub Actions**.
 4. Push to `main` (or run the **Deploy to GitHub Pages** workflow manually).
-5. The site will be available at:
+5. The site will be available at `https://<owner>.github.io/<repo>/` — for this
+   repository:
 
 ```text
 https://azkalhaq.github.io/kafi-4/
 ```
 
-The Next.js config uses `output: "export"` with `basePath: "/kafi-4"` in production so assets resolve correctly under the repository subpath.
+### How the subpath is handled
+
+Pages serves project sites from `/<repo>/`, so every asset URL needs that
+prefix. `next.config.mjs` reads the `GITHUB_REPOSITORY` variable that GitHub
+Actions provides and sets `basePath` to `/<repo>` automatically, so renaming the
+repository needs no code changes. Two escape hatches:
+
+- A `<owner>.github.io` repository is served from the domain root, so no prefix
+  is applied.
+- Set `NEXT_PUBLIC_BASE_PATH` to override the inferred value — use an empty
+  string when serving from a custom domain.
+
+Local builds have no prefix, so `npm run build && npm start` works at
+`http://localhost:3000`.
 
 ## Accessibility included
 
